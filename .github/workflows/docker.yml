@@ -60,7 +60,7 @@ jobs:
       - name: Build and push the image
         run: |
           docker login --username daeaker --password ${{secrets.ACCESS_TOKEN}} ghcr.io
-          docker build -t ghcr.io/daeaker/guitar-inventory-management:latest --file Dockerfile .  
+          docker build -t ghcr.io/daeaker/coffee-order:latest --file Dockerfile .  
           docker push ghcr.io/daeaker/coffee-order:latest
 =======
 >>>>>>> origin/master
