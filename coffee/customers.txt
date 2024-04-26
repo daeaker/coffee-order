@@ -1,1 +1,2 @@
 john,$2a$10$oOCwwZhAUReppca/C1zRNeD965V/4f2AdcQjjuogP92VjQ0fk0n0.,john@email.com
+username,$2a$10$upRsxe/9hqP6eH/eSEmAWOdG/FpKERh/ZH8QdgDUIXjouW4q/BS/i,email

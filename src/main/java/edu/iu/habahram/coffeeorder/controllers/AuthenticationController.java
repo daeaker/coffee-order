@@ -2,12 +2,13 @@ package edu.iu.habahram.coffeeorder.controllers;
 
 
 import edu.iu.habahram.coffeeorder.model.Customer;
+import edu.iu.habahram.coffeeorder.repository.CustomerFileRepository;
 import edu.iu.habahram.coffeeorder.repository.CustomerRepository;
 import edu.iu.habahram.coffeeorder.security.TokenService;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,16 +17,19 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
-    CustomerRepository customerRepository;
-    public AuthenticationController(CustomerRepository customerRepository, AuthenticationManager authenticationManager, TokenService tokenService) {
-        this.customerRepository = customerRepository;
+    CustomerRepository customerFileRepository;
+    public AuthenticationController(CustomerRepository customerFileRepository, AuthenticationManager authenticationManager, TokenService tokenService) {
+        this.customerFileRepository = customerFileRepository;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
     }
     @PostMapping("/signup")
     public void signup(@RequestBody Customer customer) {
         try {
-            customerRepository.save(customer);
+            BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+            String passwordEncoded = bc.encode(customer.getPassword());
+            customer.setPassword(passwordEncoded);
+            customerFileRepository.save(customer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +41,7 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                customer.username(), customer.password()));
+                                customer.getUsername(), customer.getPassword()));
         return tokenService.generateToken(authentication);
     }
 
